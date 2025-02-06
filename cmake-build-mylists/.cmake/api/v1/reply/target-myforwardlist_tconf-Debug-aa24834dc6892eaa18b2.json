@@ -1,0 +1,58 @@
+{
+	"backtrace" : 5,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"include"
+		],
+		"files" : 
+		[
+			"myforwardlist/test/config/conf.cmake",
+			"myforwardlist/unittest.cmake",
+			"myforwardlist/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 2,
+				"line" : 19,
+				"parent" : 0
+			},
+			{
+				"file" : 1,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 18,
+				"parent" : 2
+			},
+			{
+				"file" : 0,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 4,
+				"parent" : 4
+			}
+		]
+	},
+	"id" : "myforwardlist_tconf::@43dbf27a705ca1e47194",
+	"name" : "myforwardlist_tconf",
+	"paths" : 
+	{
+		"build" : "myforwardlist",
+		"source" : "myforwardlist"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}
