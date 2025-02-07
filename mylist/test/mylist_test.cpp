@@ -13,8 +13,20 @@ TEST(MyListTests, Constructor1IsEmpty) {
     MyList<int> myList;
     std::list<int> testList;
 
-    ASSERT_EQ(myList.empty(), testList.empty());
+    EXPECT_EQ(myList.empty(), testList.empty());
 }
+
+/// тест конструктора, заполняющего список count количеством копий элемента со значением value
+// TEST(MyListTests, Constructor2HoldValues) {
+//
+//     int size = 2;
+//     int value = 1;
+//     MyList<int> myList(size,value);
+//     std::list<int> testList(size, value);
+//
+//     EXPECT_EQ(myList.front(), testList.front());
+//     EXPECT_EQ(myList.back(), testList.back());
+// }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 /////// ТЕСТЫ ПЕРЕДАЧИ ПОСЛЕДНЕГО ЭЛЕМЕНТА СПИСКА И ДОБАВЛЕНИЯ ЭЛЕМЕНТА В КОНЕЦ СПИСКА ///////
@@ -29,12 +41,12 @@ TEST(MyListTests, pushBackCheckSize) {
     myList.pushBack(1);
     testList.push_back(1);
 
-    ASSERT_EQ(myList.getSize(), testList.size());
+    EXPECT_EQ(myList.getSize(), testList.size());
 
     myList.pushBack(1);
     testList.push_back(1);
 
-    ASSERT_EQ(myList.getSize(), testList.size());
+    EXPECT_EQ(myList.getSize(), testList.size());
 }
 
 /// Тест возможности передачи ссылки на последний элемент списка посредством проверки его значения
@@ -46,12 +58,12 @@ TEST(MyListTests, backCheck) {
     myList.pushBack(1);
     testList.push_back(1);
 
-    ASSERT_EQ(myList.back(), testList.back());
+    EXPECT_EQ(myList.back(), testList.back());
 
     myList.pushBack(2);
     testList.push_back(2);
 
-    ASSERT_EQ(myList.back(), testList.back());
+    EXPECT_EQ(myList.back(), testList.back());
 }
 
 /// Тест возможности изменения последнего элемента списка по передаваемой ссылке
@@ -66,7 +78,7 @@ TEST(MyListTests, backCheckChangingValueCheck) {
     myList.back() += 1;
     testList.back() += 1;
 
-    ASSERT_EQ(myList.back(), testList.back());
+    EXPECT_EQ(myList.back(), testList.back());
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,12 +94,12 @@ TEST(MyListTests, pushFrontCheckSize) {
     myList.pushFront(1);
     testList.push_front(1);
 
-    ASSERT_EQ(myList.getSize(), testList.size());
+    EXPECT_EQ(myList.getSize(), testList.size());
 
     myList.pushFront(1);
     testList.push_front(1);
 
-    ASSERT_EQ(myList.getSize(), testList.size());
+    EXPECT_EQ(myList.getSize(), testList.size());
 }
 
 /// Тест возможности передачи ссылки на первый элемент списка посредством проверки его значения
@@ -99,12 +111,12 @@ TEST(MyListTests, frontCheck) {
     myList.pushBack(1);
     testList.push_back(1);
 
-    ASSERT_EQ(myList.front(), testList.front());
+    EXPECT_EQ(myList.front(), testList.front());
 
     myList.pushBack(2);
     testList.push_back(2);
 
-    ASSERT_EQ(myList.front(), testList.front());
+    EXPECT_EQ(myList.front(), testList.front());
 }
 
 /// Тест возможности изменения значения первого элемента списка по передаваемой ссылке на него
@@ -119,14 +131,15 @@ TEST(MyListTests, frontCheckChangingValueCheck) {
     myList.back() += 1;
     testList.back() += 1;
 
-    ASSERT_EQ(myList.front(), testList.front());
+    EXPECT_EQ(myList.front(), testList.front());
 }
 
 ////////////////////////////////////////////////////////////
 /// ТЕСТЫ УДАЛЕНИЯ ПЕРВОГО И ПОСЛЕДНЕГО ЭЛЕМЕНТОВ СПИСКА ///
 ////////////////////////////////////////////////////////////
 
-/// Проверка количества элементов после удаления последних элементов списка
+/// Проверка количества элементов после удаления последних элементов списка,
+/// и не будет ли ошибки при удалении последнего элемента у пустого списка
 TEST(MyListTests, popBackCheckSize) {
 
     MyList<int> myList;
@@ -141,15 +154,18 @@ TEST(MyListTests, popBackCheckSize) {
     myList.popBack();
     testList.pop_back();
 
-    ASSERT_EQ(myList.getSize(), testList.size());
+    EXPECT_EQ(myList.getSize(), testList.size());
 
     myList.popBack();
     testList.pop_back();
 
-    ASSERT_EQ(myList.getSize(), testList.size());
+    EXPECT_EQ(myList.getSize(), testList.size());
+
+    myList.popBack();
 }
 
 /// Проверка количества элементов после удаления первых элементов списка
+/// и не будет ли ошибки после удаления первого элемента у пустого списка
 TEST(MyListTests, popFrontCheckSize) {
 
     MyList<int> myList;
@@ -164,16 +180,59 @@ TEST(MyListTests, popFrontCheckSize) {
     myList.popFront();
     testList.pop_front();
 
-    ASSERT_EQ(myList.getSize(), testList.size());
+    EXPECT_EQ(myList.getSize(), testList.size());
 
     myList.popFront();
     testList.pop_front();
 
-    ASSERT_EQ(myList.getSize(), testList.size());
+    EXPECT_EQ(myList.getSize(), testList.size());
+
+    myList.popFront();
 }
 
-/// проверка функции очищения списка
+/// Тест функции очищения списка
 TEST(MyListTests, clearListCheck) {
+
+    MyList<int> myList;
+    std::list<int> testList;
+
+    myList.clearList(); // вызов очистки пустого списка
+    testList.clear();
+
+    myList.pushBack(1);
+    testList.push_back(1);
+
+    myList.pushBack(1);
+    testList.push_back(1);
+
+    myList.clearList(); // обычная очистка списка
+    testList.clear();
+
+    EXPECT_EQ(myList.getSize(), testList.size());
+
+    myList.clearList(); // попытка очистить список, который уже был очищен
+    testList.clear();
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+//////////////////// ТЕСТЫ ФУНКЦИЙ НА РАБОТУ С ЭЛЕМЕНТАМИ СПИСКА ////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+/// тест функции замены содержимого пустого списка на некоторое количество одинаковых элементов
+TEST(MyListTests, assignCheckEmpty) {
+
+    MyList<int> myList;
+    std::list<int> testList;
+
+    myList.assign(2, 2);
+    testList.assign(2, 2);
+
+    EXPECT_EQ(myList.front(), testList.front());
+    EXPECT_EQ(myList.back(), testList.back());
+}
+
+/// тест функции замены содержимого не пустого списка на некоторое количество одинаковых элементов
+TEST(MyListTests, assignCheckNotEmpty) {
 
     MyList<int> myList;
     std::list<int> testList;
@@ -184,11 +243,13 @@ TEST(MyListTests, clearListCheck) {
     myList.pushBack(1);
     testList.push_back(1);
 
-    myList.clearList();
-    testList.clear();
+    myList.assign(2, 2);
+    testList.assign(2, 2);
 
-    ASSERT_EQ(myList.getSize(), testList.size());
+    EXPECT_EQ(myList.front(), testList.front());
+    EXPECT_EQ(myList.back(), testList.back());
 }
+
 
 // TEST(MyListTests, myIteratorTest) {
 //

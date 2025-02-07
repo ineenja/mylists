@@ -47,7 +47,7 @@ public:
         pointer operator->() const { return mPtr; }
 
         // префиксный итератор
-        MyIterator& operator++() {mPtr++; return *this;}
+        MyIterator& operator++() {++mPtr; return *this;}
 
         //постфиксный итератор
         MyIterator operator++(int) {MyIterator temp = *this; ++(*this); return temp;}
@@ -70,9 +70,12 @@ public:
     // указателям на первый и последний узлы списка присваиваем nullptr чтобы было ясно что узлов нет
     explicit MyList() : first(nullptr), last(nullptr), size(0) {};
 
-    // TODO:
     // конструктор с числом count копий элемента имеющего значение value
+    MyList(size_t count, const T& value) : MyList(){ // делегируем создание пустого списка конструктору по умолчанию
+        this->assign(count, value);
+    }
 
+    // TODO:
     // конструктор копирования
 
     // конструктор перемещения
@@ -198,9 +201,10 @@ public:
         }
     }
 
+    // функция заполнения списка count количеством копий значения value
     void assign(size_t count, const T& value) {
-        clearList();
-        for (size_t i = 0; i < count; i++) {
+        clearList(); // предварительное очищение списка
+        for (size_t i = 0; i < count; i++) { // заполнение пустого списка копиями value в цикле
             pushBack(value);
         }
     }
