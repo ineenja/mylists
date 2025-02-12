@@ -35,28 +35,43 @@ public:
     ////////////////////////////////////////////////////////////////
 
     struct MyIterator {
-        using iterator_category = std::bidirectional_iterator_tag;
-        using difference_type = std::ptrdiff_t;
-        using value_type = T;
-        using pointer = T*;
-        using reference = T&;
 
-        MyIterator(pointer ptr) : mPtr(ptr) {}
+        MyIterator(Node<T>* ptr) : mPtr(ptr) {}
 
-        reference operator*() const { return *mPtr; }
-        pointer operator->() const { return mPtr; }
+        T& operator*() const { return mPtr->value; }
+        T* operator->() const { return mPtr; }
 
-        // префиксный итератор
-        MyIterator& operator++() {++mPtr; return *this;}
+        // префиксный итератор сложения
+        MyIterator& operator++() {
+        mPtr = mPtr->next;
+        return *this;
+        }
 
-        //постфиксный итератор
-        MyIterator operator++(int) {MyIterator temp = *this; ++(*this); return temp;}
+        //постфиксный итератор сложения
+        MyIterator operator++(int) {
+        MyIterator temp = *this;
+        mPtr = mPtr->next;
+        return temp;
+        }
+
+        // префиксный итератор вычитания
+        MyIterator& operator--() {
+        mPtr = mPtr->prev;
+        return *this;
+        }
+
+        //постфиксный итератор вычитания
+        MyIterator operator--(int) {
+        MyIterator temp = *this;
+        mPtr = mPtr->prev;
+        return temp;
+        }
 
         friend bool operator==(const MyIterator& lhs, const MyIterator& rhs) { return lhs.mPtr == rhs.mPtr; }
         friend bool operator!=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs == rhs); }
 
     private:
-        pointer mPtr;
+        Node<T>* mPtr;
 
     };
 
@@ -220,7 +235,7 @@ public:
 
     // получения адресов первого и последнего элементов списка
     MyIterator begin() const { return MyIterator(first); }
-    MyIterator end() const { return MyIterator(last); }
+    MyIterator end() const { return MyIterator(last)++; }
 
     bool empty() const {
         return size == 0;

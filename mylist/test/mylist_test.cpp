@@ -17,16 +17,16 @@ TEST(MyListTests, Constructor1IsEmpty) {
 }
 
 /// тест конструктора, заполняющего список count количеством копий элемента со значением value
-// TEST(MyListTests, Constructor2HoldValues) {
-//
-//     int size = 2;
-//     int value = 1;
-//     MyList<int> myList(size,value);
-//     std::list<int> testList(size, value);
-//
-//     EXPECT_EQ(myList.front(), testList.front());
-//     EXPECT_EQ(myList.back(), testList.back());
-// }
+ TEST(MyListTests, Constructor2HoldValues) {
+
+     int size = 2;
+     int value = 1;
+     MyList<int> myList(size,value);
+     std::list<int> testList(size, value);
+
+     EXPECT_EQ(myList.front(), testList.front());
+     EXPECT_EQ(myList.back(), testList.back());
+ }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 /////// ТЕСТЫ ПЕРЕДАЧИ ПОСЛЕДНЕГО ЭЛЕМЕНТА СПИСКА И ДОБАВЛЕНИЯ ЭЛЕМЕНТА В КОНЕЦ СПИСКА ///////
@@ -251,20 +251,112 @@ TEST(MyListTests, assignCheckNotEmpty) {
 }
 
 
-// TEST(MyListTests, myIteratorTest) {
-//
-//     MyList<int> myList;
-//
-//     myList.pushBack(1);
-//     myList.pushBack(2);
-//     myList.pushBack(3);
-//
-//     int test = 1;
-//     for (auto iter : myList) {
-//         std::cout << iter << std::endl;
-//     }
-// }
+/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// ТЕСТЫ ИТЕРАТОРА //////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 
+/// тест возвращения итератора на первый узел списка и оператора разыменования
+ TEST(MyListTests, beginCheck) {
 
+     MyList<int> myList;
 
+     myList.pushBack(1);
+     myList.pushBack(2);
+     myList.pushBack(3);
 
+     auto iter = myList.begin();
+
+     EXPECT_EQ(myList.front(), *iter);
+ }
+
+ /// тест возвращения итератора на первый узел списка и оператора декремента
+  TEST(MyListTests, endCheck) {
+
+      MyList<int> myList;
+
+      myList.pushBack(1);
+      myList.pushBack(2);
+      myList.pushBack(3);
+
+      auto iter = myList.end()--;
+
+      EXPECT_EQ(myList.back(), *iter);
+
+      iter--;
+
+      EXPECT_EQ(2, *iter);
+  }
+
+  /// тест префиксного инкремента
+   TEST(MyListTests, prefixIncrementCheck) {
+
+       MyList<int> myList;
+
+       myList.pushBack(1);
+       myList.pushBack(2);
+       myList.pushBack(3);
+
+       auto iter = myList.begin();
+       EXPECT_EQ(1, *iter);
+
+       iter++;
+       EXPECT_EQ(2, *iter);
+
+       iter++;
+       EXPECT_EQ(3, *iter);
+   }
+
+   /// тест постфиксного инкремента
+    TEST(MyListTests, postfixIncrementCheck) {
+
+        MyList<int> myList;
+
+        myList.pushBack(1);
+        myList.pushBack(2);
+        myList.pushBack(3);
+
+        auto iter = myList.begin();
+
+        ++iter;
+        EXPECT_EQ(2, *iter);
+
+        ++iter;
+        EXPECT_EQ(3, *iter);
+    }
+
+    /// тест префиксного декремента
+     TEST(MyListTests, prefixDecrementCheck) {
+
+         MyList<int> myList;
+
+         myList.pushBack(1);
+         myList.pushBack(2);
+         myList.pushBack(3);
+
+         auto iter = myList.end()--;
+         EXPECT_EQ(3, *iter);
+
+         iter--;
+         EXPECT_EQ(2, *iter);
+
+         iter--;
+         EXPECT_EQ(1, *iter);
+     }
+
+     /// тест постфиксного инкремента
+      TEST(MyListTests, postfixDecrementCheck) {
+
+          MyList<int> myList;
+
+          myList.pushBack(1);
+          myList.pushBack(2);
+          myList.pushBack(3);
+
+          auto iter = myList.end();
+
+          --iter;
+          EXPECT_EQ(2, *iter);
+
+          --iter;
+          EXPECT_EQ(1, *iter);
+      }
