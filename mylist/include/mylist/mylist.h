@@ -1,9 +1,10 @@
 #ifndef MYLIST
 #define MYLIST
 
-#include <algorithm>
-#include <list>
 #include <memory>
+#include <iostream>
+#include <list>
+#include <bits/locale_facets_nonio.h>
 
 ////////////////////////////////////////////////////////////////////
 /////////////////////////// УЗЕЛ СПИСКА ////////////////////////////
@@ -90,10 +91,23 @@ public:
         this->assign(count, value);
     }
 
-    // TODO:
     // конструктор копирования
+    MyList(const MyList& other) : MyList() {
+        for (const T& value : other) {
+            pushBack(value);
+        }
+    }
 
     // конструктор перемещения
+    MyList(MyList&& other) : MyList() {
+        size = other.size;
+        first = other.first;
+        last = other.last;
+
+        other.first = nullptr;
+        other.last = nullptr;
+        other.size = 0;
+    }
 
     // конструктор для создания контейнера с содержимым списка инициализации init
 
@@ -113,6 +127,7 @@ public:
         while (first) { // пока указатель на первый элемент списка на что-то указывает, значит список еще не пуст
             popFront(); // пока список еще не пуст, в цикле будет вызываться функция удаления первого элемента списка
         }
+        size = 0;
     }
 
 
@@ -122,8 +137,6 @@ public:
 
     // оператор присваивания копированием
     MyList& operator= (const MyList& other) {
-        clearList();
-        size = other.size;
         for (const T& value : other) {
             pushBack(value);
         }
@@ -133,7 +146,6 @@ public:
     // оператор присваивания перемещением
     MyList& operator= (MyList&& other) {
         clearList();
-        size = other.size;
     }
 
     // замена текущего содержимого содержимым списка инициализации
@@ -233,9 +245,13 @@ public:
     T& front() const { return first->value; }
     T& back() const { return last->value; }
 
-    // получения адресов первого и последнего элементов списка
+    // получения адресов первого и следующего после последнего элементов списка
     MyIterator begin() const { return MyIterator(first); }
-    MyIterator end() const { return MyIterator(last)++; }
+    MyIterator end() const { return MyIterator(last->next); }
+
+    // получения адресов стоящего перед первым и последнего элементов списка
+    MyIterator rBegin() const { return MyIterator(last); }
+    MyIterator rEnd() const { return MyIterator(first->prev); }
 
     bool empty() const {
         return size == 0;

@@ -28,6 +28,50 @@ TEST(MyListTests, Constructor1IsEmpty) {
      EXPECT_EQ(myList.back(), testList.back());
  }
 
+/// тест конструктора копирования
+TEST(MyListTests, ConstructorCopying) {
+
+    MyList<int> myList;
+
+    myList.pushBack(1);
+    myList.pushBack(2);
+    myList.pushBack(3);
+
+    MyList<int> testList(myList);
+
+    auto iter1 = myList.begin();
+    auto iter2 = testList.begin();
+
+    EXPECT_EQ(*iter1, *iter2);
+    iter1++; iter2++;
+    EXPECT_EQ(*iter1, *iter2);
+    iter1++; iter2++;
+    EXPECT_EQ(*iter1, *iter2);
+
+    EXPECT_EQ(myList.getSize(), testList.getSize());
+}
+
+/// тест конструктора перемещения
+TEST(MyListTests, ConstructorMoving) {
+
+    MyList<int> originalList;
+
+    originalList.pushBack(1);
+    originalList.pushBack(2);
+    originalList.pushBack(3);
+
+    MyList<int> myList(std::move(originalList));
+
+    auto iter1 = myList.begin();
+    EXPECT_EQ(*iter1, 1);
+    iter1++;
+    EXPECT_EQ(*iter1, 2);
+    iter1++;
+    EXPECT_EQ(*iter1, 3);
+    EXPECT_EQ(myList.getSize(), 3);
+    EXPECT_EQ(originalList.empty(), true);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 /////// ТЕСТЫ ПЕРЕДАЧИ ПОСЛЕДНЕГО ЭЛЕМЕНТА СПИСКА И ДОБАВЛЕНИЯ ЭЛЕМЕНТА В КОНЕЦ СПИСКА ///////
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,6 +294,27 @@ TEST(MyListTests, assignCheckNotEmpty) {
     EXPECT_EQ(myList.back(), testList.back());
 }
 
+/// тест функции замены содержимого не пустого списка на некоторое количество одинаковых элементов
+TEST(MyListTests, assignOperatorCopyingCheck) {
+
+    MyList<int> myList;
+    MyList<int> testList;
+
+    myList.pushBack(1);
+    myList.pushBack(2);
+    myList.pushBack(3);
+
+    testList = myList;
+
+    auto iter1 = myList.begin();
+    auto iter2 = testList.begin();
+
+    EXPECT_EQ(1, *iter2); // 1 элемент
+    iter1++; iter2++;
+    EXPECT_EQ(*iter1, *iter2); // 2 элемент
+    iter1++; iter2++;
+    EXPECT_EQ(*iter1, *iter2); // 3 элемент
+}
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// ТЕСТЫ ИТЕРАТОРА //////////////////////////////////
@@ -269,7 +334,7 @@ TEST(MyListTests, assignCheckNotEmpty) {
      EXPECT_EQ(myList.front(), *iter);
  }
 
- /// тест возвращения итератора на первый узел списка и оператора декремента
+ /// тест возвращения итератора на следующий после последнего узел списка
   TEST(MyListTests, endCheck) {
 
       MyList<int> myList;
@@ -278,14 +343,48 @@ TEST(MyListTests, assignCheckNotEmpty) {
       myList.pushBack(2);
       myList.pushBack(3);
 
-      auto iter = myList.end()--;
+      auto iter = myList.end();
 
-      EXPECT_EQ(myList.back(), *iter);
+      bool flagNull = true;
+      if (iter == nullptr) {
+          flagNull = false;
+      }
 
-      iter--;
-
-      EXPECT_EQ(2, *iter);
+      EXPECT_EQ(false, flagNull);
   }
+
+/// тест возвращения итератора на первый узел списка и оператора разыменования
+TEST(MyListTests, rBeginCheck) {
+
+    MyList<int> myList;
+
+    myList.pushBack(1);
+    myList.pushBack(2);
+    myList.pushBack(3);
+
+    auto iter = myList.rBegin();
+
+    EXPECT_EQ(myList.back(), *iter);
+}
+
+/// тест возвращения итератора на предшествующий первому узел списка
+TEST(MyListTests, rEndCheck) {
+
+    MyList<int> myList;
+
+    myList.pushBack(1);
+    myList.pushBack(2);
+    myList.pushBack(3);
+
+    auto iter = myList.rEnd();
+
+    bool flagNull = true;
+    if (iter == nullptr) {
+        flagNull = false;
+    }
+
+    EXPECT_EQ(false, flagNull);
+}
 
   /// тест префиксного инкремента
    TEST(MyListTests, prefixIncrementCheck) {
@@ -333,7 +432,7 @@ TEST(MyListTests, assignCheckNotEmpty) {
          myList.pushBack(2);
          myList.pushBack(3);
 
-         auto iter = myList.end()--;
+         auto iter = myList.rBegin();
          EXPECT_EQ(3, *iter);
 
          iter--;
@@ -352,7 +451,8 @@ TEST(MyListTests, assignCheckNotEmpty) {
           myList.pushBack(2);
           myList.pushBack(3);
 
-          auto iter = myList.end();
+          auto iter = myList.rBegin();
+          EXPECT_EQ(3, *iter);
 
           --iter;
           EXPECT_EQ(2, *iter);
