@@ -336,6 +336,17 @@ public:
         return pos;
     }
 
+    // удаление элементов в диапазоне [first, last)
+    MyIterator erase(MyIterator first, MyIterator last) {
+        MyIterator temp = last;
+        if (first != last) {
+            for (MyIterator iter = first; iter != last; ++iter) {
+                erase(iter);
+            }
+        }
+        return temp;
+    }
+
     //////////////////////////////////////////////////
     ////////////// ВОЗВРАЩЕНИЯ ЗНАЧЕНИЙ //////////////
     //////////////////////////////////////////////////

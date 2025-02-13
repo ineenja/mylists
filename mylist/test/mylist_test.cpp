@@ -456,6 +456,48 @@ TEST(MyListTests, eraseSingleElement3) {
     EXPECT_EQ(4, myList.getSize());
 }
 
+/// тест функции удаления узлов в диапазоне [first, last)
+TEST(MyListTests, eraseElementsInRange) {
+
+    MyList<int> myList = {1, 2, 3, 3, 3, 4, 5};
+
+    auto iterFirst = myList.begin();
+    iterFirst.forward(3);
+    auto iterLast = myList.begin();
+    iterLast.forward(5);
+
+    auto iter = myList.erase(iterFirst, iterLast);
+    EXPECT_EQ(4, *iter);
+
+    int check = 1;
+    for (auto iter = myList.begin(); iter != myList.end(); iter++) {
+        EXPECT_EQ(check, *iter);
+        check++;
+    }
+    EXPECT_EQ(5, myList.getSize());
+}
+
+/// тест функции удаления узлов в диапазоне [first, last), частный случай first == last
+TEST(MyListTests, eraseElementsInRangeOfZero) {
+
+    MyList<int> myList = {1, 2, 3, 4, 5};
+
+    auto iterFirst = myList.begin();
+    iterFirst.forward(3);
+    auto iterLast = myList.begin();
+    iterLast.forward(3);
+
+    auto iter = myList.erase(iterFirst, iterLast);
+    EXPECT_EQ(4, *iter);
+
+    int check = 1;
+    for (auto iter = myList.begin(); iter != myList.end(); iter++) {
+        EXPECT_EQ(check, *iter);
+        check++;
+    }
+    EXPECT_EQ(5, myList.getSize());
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// ТЕСТЫ ИТЕРАТОРА //////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
