@@ -353,7 +353,7 @@ TEST(MyListTests, insertOneElementCheck) {
 }
 
 /// тест функции вставки count новых узлов перед узлом на который указывает итератор
-TEST(MyListTests, insertManyElementCheck) {
+TEST(MyListTests, insertManyElementsCheck) {
 
     MyList<int> myList;
 
@@ -374,6 +374,85 @@ TEST(MyListTests, insertManyElementCheck) {
     iter++;
     EXPECT_EQ(1, *iter);
 
+    EXPECT_EQ(4, myList.getSize());
+}
+
+/// тест функции вставки новых узлов из init списка перед узлом на который указывает итератор
+TEST(MyListTests, insertElementFromListCheck) {
+
+    MyList<int> myList;
+
+    myList.pushBack(1);
+    myList.pushBack(5);
+
+    auto iter = myList.begin();
+    iter++;
+
+    iter = myList.insert(iter, {2,3,4});
+
+    EXPECT_EQ(2, *iter);
+
+    int check = 1;
+    for (auto iter = myList.begin(); iter != myList.end(); iter++) {
+        EXPECT_EQ(check, *iter);
+        check++;
+    }
+
+    EXPECT_EQ(5, myList.getSize());
+}
+
+/// тест функции удаления узла, вариант когда узел в середине
+TEST(MyListTests, eraseSingleElement1) {
+
+    MyList<int> myList = {1, 2, 3, 3, 4};
+
+    auto iter = myList.begin();
+    iter.forward(3);
+
+    iter = myList.erase(iter);
+    EXPECT_EQ(4, *iter);
+
+    int check = 1;
+    for (auto iter = myList.begin(); iter != myList.end(); iter++) {
+        EXPECT_EQ(check, *iter);
+        check++;
+    }
+    EXPECT_EQ(4, myList.getSize());
+}
+
+/// тест функции удаления узла, вариант когда узел - первый
+TEST(MyListTests, eraseSingleElement2) {
+
+    MyList<int> myList = {1, 2, 3, 4, 5};
+
+    auto iter = myList.begin();
+
+    iter = myList.erase(iter);
+    EXPECT_EQ(2, *iter);
+
+    int check = 2;
+    for (auto iter = myList.begin(); iter != myList.end(); iter++) {
+        EXPECT_EQ(check, *iter);
+        check++;
+    }
+    EXPECT_EQ(4, myList.getSize());
+}
+
+/// тест функции удаления узла, вариант когда узел - последний
+TEST(MyListTests, eraseSingleElement3) {
+
+    MyList<int> myList = {1, 2, 3, 4, 5};
+
+    auto iter = myList.begin();
+    iter.forward(4);
+
+    iter = myList.erase(iter);
+
+    int check = 1;
+    for (auto iter = myList.begin(); iter != myList.end(); iter++) {
+        EXPECT_EQ(check, *iter);
+        check++;
+    }
     EXPECT_EQ(4, myList.getSize());
 }
 

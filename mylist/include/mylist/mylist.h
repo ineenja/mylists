@@ -1,6 +1,7 @@
 #ifndef MYLIST
 #define MYLIST
 
+#include <algorithm>
 #include <memory>
 #include <iostream>
 #include <list>
@@ -282,7 +283,6 @@ public:
 
     // вставка count новых узлов на указанную позицию с копированием value
     void insert(MyIterator pos, size_t count, const T& value) {
-        Node<T>* newNode = new Node<T>(value, nullptr, nullptr);
         if (pos != nullptr) {
             for (size_t i = 0; i < count; ++i) {
                 insert(pos, value);
@@ -293,6 +293,47 @@ public:
                 pushBack(value);
             }
         }
+    }
+
+    // вставка новых узлов на указанную позицию из содержимого списка инициализации с копированием value
+    MyIterator insert(MyIterator pos, std::initializer_list<T> init) {
+        if (pos != nullptr) {
+            for (const T& value : init) {
+                insert(pos, value);
+            }
+        }
+        else {
+            for (const T& value : init) {
+                pushBack(value);
+            }
+        }
+        for (size_t i = 0; i < init.size(); ++i) {
+            --pos;
+        }
+
+        return pos;
+    }
+
+    // удаление узла в позиции pos
+    MyIterator erase(MyIterator pos) {
+        if (pos->next != nullptr && pos->prev != nullptr) { // вариант когда удаляемый узел в середине
+            Node<T>* temp = pos.get();
+            pos++;
+            pos->prev->prev->next = pos.get();
+            pos->prev = pos->prev->prev;
+            delete temp;
+            size--;
+            return pos; // тут return внутри условия чтобы не было ошибки сегментации
+        }
+        if (pos == last) { // вариант когда удаляемый узел - последний
+            popBack();
+            pos = nullptr;
+        }
+        if (pos == first) { // вариант когда удаляемый узел - первый
+            popFront();
+            pos = first;
+        }
+        return pos;
     }
 
     //////////////////////////////////////////////////
