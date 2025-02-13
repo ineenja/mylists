@@ -72,6 +72,20 @@ TEST(MyListTests, ConstructorMoving) {
     EXPECT_EQ(originalList.empty(), true);
 }
 
+/// тест конструктора через список инициализации
+TEST(MyListTests, ConstructorInitList) {
+
+    MyList<int> myList = {1,2,3};
+
+    auto iter1 = myList.begin();
+    EXPECT_EQ(*iter1, 1);
+    iter1++;
+    EXPECT_EQ(*iter1, 2);
+    iter1++;
+    EXPECT_EQ(*iter1, 3);
+    EXPECT_EQ(myList.getSize(), 3);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 /////// ТЕСТЫ ПЕРЕДАЧИ ПОСЛЕДНЕГО ЭЛЕМЕНТА СПИСКА И ДОБАВЛЕНИЯ ЭЛЕМЕНТА В КОНЕЦ СПИСКА ///////
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -316,6 +330,53 @@ TEST(MyListTests, assignOperatorCopyingCheck) {
     EXPECT_EQ(*iter1, *iter2); // 3 элемент
 }
 
+/// тест функции вставки нового узла перед узлом на который указывает итератор
+TEST(MyListTests, insertOneElementCheck) {
+
+    MyList<int> myList;
+
+    myList.pushBack(1);
+    myList.pushBack(3);
+
+    auto iter1 = myList.begin();
+    iter1++;
+
+    iter1 = myList.insert(iter1, 2);
+
+    EXPECT_EQ(*iter1, 2);
+
+    int check = 1;
+    for (auto iter = myList.begin(); iter != myList.end(); iter++) {
+        EXPECT_EQ(check, *iter);
+        check++;
+    }
+}
+
+/// тест функции вставки count новых узлов перед узлом на который указывает итератор
+TEST(MyListTests, insertManyElementCheck) {
+
+    MyList<int> myList;
+
+    myList.pushBack(1);
+    myList.pushBack(1);
+
+    auto iter = myList.begin();
+    iter++;
+
+    myList.insert(iter, 2, 2);
+
+    iter = myList.begin();
+    EXPECT_EQ(1, *iter);
+    iter++;
+    EXPECT_EQ(2, *iter);
+    iter++;
+    EXPECT_EQ(2, *iter);
+    iter++;
+    EXPECT_EQ(1, *iter);
+
+    EXPECT_EQ(4, myList.getSize());
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// ТЕСТЫ ИТЕРАТОРА //////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
@@ -460,3 +521,33 @@ TEST(MyListTests, rEndCheck) {
           --iter;
           EXPECT_EQ(1, *iter);
       }
+
+/// тест функции переноса итератора вперед
+TEST(MyListTests, iteratorForwardCheck) {
+
+    MyList<int> myList;
+
+    myList.pushBack(1);
+    myList.pushBack(2);
+    myList.pushBack(3);
+
+    auto iter = myList.begin();
+    iter.forward(1); // перенос итератора с 1 на 2 элемент
+    EXPECT_EQ(2, *iter);
+
+}
+
+/// тест функции переноса итератора вперед
+TEST(MyListTests, iteratorBackwardCheck) {
+
+    MyList<int> myList;
+
+    myList.pushBack(1);
+    myList.pushBack(2);
+    myList.pushBack(3);
+
+    auto iter = myList.rBegin();
+    iter.backward(1); // перенос итератора с 3 на 2 элемент
+    EXPECT_EQ(2, *iter);
+
+}

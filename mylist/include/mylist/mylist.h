@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////////
 template <typename Y>
 struct Node {
-    Node(const Y& value, Node* prev = nullptr, Node* next = nullptr)
+    Node(const Y& value, Node<Y>* prev = nullptr, Node<Y>* next = nullptr)
     : value(value), prev(prev), next(next) {}
 
     Y value; // копия переданного элемента списка
@@ -40,7 +40,10 @@ public:
         MyIterator(Node<T>* ptr) : mPtr(ptr) {}
 
         T& operator*() const { return mPtr->value; }
-        T* operator->() const { return mPtr; }
+        Node<T>* operator->() { return mPtr; }
+
+        Node<T>* get() const { return mPtr; }
+
 
         // префиксный итератор сложения
         MyIterator& operator++() {
@@ -71,6 +74,23 @@ public:
         friend bool operator==(const MyIterator& lhs, const MyIterator& rhs) { return lhs.mPtr == rhs.mPtr; }
         friend bool operator!=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs == rhs); }
 
+        // перенос итератора на step шагов вперед
+        void forward(size_t step) {
+            for (size_t i = 0; i < step; ++i) {
+                if (mPtr != nullptr) {
+                    mPtr = mPtr->next;
+                }
+            }
+        }
+
+        // перенос итератора на step шагов назад
+        void backward(size_t step) {
+            for (size_t i = 0; i < step; ++i) {
+                if (mPtr != nullptr) {
+                    mPtr = mPtr->prev;
+                }
+            }
+        }
     private:
         Node<T>* mPtr;
 
@@ -110,7 +130,11 @@ public:
     }
 
     // конструктор для создания контейнера с содержимым списка инициализации init
-
+    MyList(std::initializer_list<T> init) : MyList() {
+        for (const T& value : init) {
+            pushBack(value);
+        }
+    }
 
 
     ////////////////////////////////////////////////////////
@@ -154,9 +178,9 @@ public:
         size = other.size;
     }
 
-    ////////////////////////////////////////////////////////
-    //////// МЕТОДЫ ДОБАВЛЕНИЯ И УДАЛЕНИЯ ЭЛЕМЕНТОВ ////////
-    ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+    //////////// МЕТОДЫ ДОБАВЛЕНИЯ И УДАЛЕНИЯ ЭЛЕМЕНТОВ(УЗЛОВ) /////////////
+    ////////////////////////////////////////////////////////////////////////
 
     // добавление элемента в конец списка
     void pushBack(const T& value) {
@@ -236,6 +260,40 @@ public:
         }
     }
 
+    // вставка нового узла на указанную позицию с копированием value
+    MyIterator insert(MyIterator pos, const T& value) {
+        // передаваемый итератор pos указывает на узел, перед которым будет вставлен новый узел
+        Node<T>* newNode = new Node<T>(value, nullptr, nullptr); // инициализируем в памяти новый узел и объявляем указатель на него
+        if (pos != nullptr) {
+            // указателю на следующий элемент нового узла присваиваем адрес узла на который указывает итератор pos
+            newNode->next = pos.get();
+            // указателю на предыдущий элемент нового узла присваиваем адрес узла, который предшествует узлу на который указывает итератор pos
+            newNode->prev = (pos->prev);
+            // указателю на следующий узел предыдущего узла присваиваем адрес нового узла
+            pos->prev->next = newNode;
+            // указателю на предыдущий узел следующего узла присваиваем адрес нового узла
+            pos->prev = newNode;
+            size++;
+        } else {
+            pushBack(value); // если итератор указывает на конец списка то просто вставляем новый узел в конец
+        }
+        return --pos; // возвращаем итератор на новый узел
+    }
+
+    // вставка count новых узлов на указанную позицию с копированием value
+    void insert(MyIterator pos, size_t count, const T& value) {
+        Node<T>* newNode = new Node<T>(value, nullptr, nullptr);
+        if (pos != nullptr) {
+            for (size_t i = 0; i < count; ++i) {
+                insert(pos, value);
+            }
+        }
+        else {
+            for (size_t i = 0; i < count; ++i) {
+                pushBack(value);
+            }
+        }
+    }
 
     //////////////////////////////////////////////////
     ////////////// ВОЗВРАЩЕНИЯ ЗНАЧЕНИЙ //////////////
