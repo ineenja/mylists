@@ -498,6 +498,61 @@ TEST(MyListTests, eraseElementsInRangeOfZero) {
     EXPECT_EQ(5, myList.getSize());
 }
 
+/// тест функции замены узла, случай когда заменяемый узел посередине
+TEST(MyListTests, emplaceCheck) {
+
+    MyList<int> myList = {1, 2, 3, 5, 5};
+
+    auto iter = myList.begin();
+    iter.forward(4);
+
+    iter = myList.emplace(iter, 4);
+    EXPECT_EQ(4, *iter);
+
+    int check = 1;
+    for (iter = myList.begin(); iter != myList.end(); iter++) {
+        EXPECT_EQ(check, *iter);
+        check++;
+    }
+    EXPECT_EQ(5, myList.getSize());
+}
+
+/// тест функции замены узла, случай когда заменяемый узел последний
+TEST(MyListTests, emplaceLastCheck) {
+
+    MyList<int> myList = {1, 2, 3, 4, 4};
+
+    auto iter = myList.end();
+
+    iter = myList.emplace(iter, 5);
+    EXPECT_EQ(5, *iter);
+
+    int check = 1;
+    for (iter = myList.begin(); iter != myList.end(); iter++) {
+        EXPECT_EQ(check, *iter);
+        check++;
+    }
+    EXPECT_EQ(5, myList.getSize());
+}
+
+/// тест функции замены узла, случай когда итератор показывает что заменяемый узел стоит перед первым
+TEST(MyListTests, emplaceBeforeFirstCheck) {
+
+    MyList<int> myList = {1, 2, 3, 4, 5};
+
+    auto iter = myList.begin();
+
+    iter = myList.emplace(iter, 0);
+    EXPECT_EQ(0, *iter);
+
+    int check = 0;
+    for (iter = myList.begin(); iter != myList.end(); iter++) {
+        EXPECT_EQ(check, *iter);
+        check++;
+    }
+    EXPECT_EQ(6, myList.getSize());
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// ТЕСТЫ ИТЕРАТОРА //////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////

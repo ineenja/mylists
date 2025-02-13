@@ -347,6 +347,22 @@ public:
         return temp;
     }
 
+    MyIterator emplace(MyIterator pos, const T& value) {
+        if (pos == first) {
+            pushFront(value);
+            pos = first;
+        } else {
+            if (pos != nullptr) {
+                pos--;
+                *pos = value;
+            } else {
+                last->value = value;
+                pos = last;
+            }
+        }
+        return pos;
+    }
+
     //////////////////////////////////////////////////
     ////////////// ВОЗВРАЩЕНИЯ ЗНАЧЕНИЙ //////////////
     //////////////////////////////////////////////////
