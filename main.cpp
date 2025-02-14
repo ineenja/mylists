@@ -1,18 +1,17 @@
 
+//#include <mylist/mylist.h>
 #include <list>
-#include <mylist/mylist.h>
 #include <iostream>
-
-void counter() {
-    static int count = 0;
-    std::cout << count++;
-}
 
 int main()
 {
-    for (size_t i =0; i < 10; i++) {
-        counter();
-    }
+    std::list<int> list = {1,2,3};
+    std::list<std::list<int>> lists;
 
+    lists.push_back(list);
+    std::cout << list.empty() << std::endl;
+
+    lists.emplace_back(list);
+    std::cout << list.empty() << std::endl;
 }
 

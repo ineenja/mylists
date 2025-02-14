@@ -7,7 +7,7 @@
 ////////////////////////////////// ТЕСТЫ ДЛЯ КОНСТРУКТОРОВ ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-/// тест конструктора по умолчанию
+///// тест конструктора по умолчанию
 TEST(MyListTests, Constructor1IsEmpty) {
 
     MyList<int> myList;
@@ -16,7 +16,7 @@ TEST(MyListTests, Constructor1IsEmpty) {
     EXPECT_EQ(myList.empty(), testList.empty());
 }
 
-/// тест конструктора, заполняющего список count количеством копий элемента со значением value
+///// тест конструктора, заполняющего список count количеством копий элемента со значением value
  TEST(MyListTests, Constructor2HoldValues) {
 
      int size = 2;
@@ -28,7 +28,7 @@ TEST(MyListTests, Constructor1IsEmpty) {
      EXPECT_EQ(myList.back(), testList.back());
  }
 
-/// тест конструктора копирования
+///// тест конструктора копирования
 TEST(MyListTests, ConstructorCopying) {
 
     MyList<int> myList;
@@ -51,7 +51,7 @@ TEST(MyListTests, ConstructorCopying) {
     EXPECT_EQ(myList.getSize(), testList.getSize());
 }
 
-/// тест конструктора перемещения
+///// тест конструктора перемещения
 TEST(MyListTests, ConstructorMoving) {
 
     MyList<int> originalList;
@@ -72,7 +72,7 @@ TEST(MyListTests, ConstructorMoving) {
     EXPECT_EQ(originalList.empty(), true);
 }
 
-/// тест конструктора через список инициализации
+///// тест конструктора через список инициализации
 TEST(MyListTests, ConstructorInitList) {
 
     MyList<int> myList = {1,2,3};
@@ -90,7 +90,7 @@ TEST(MyListTests, ConstructorInitList) {
 /////// ТЕСТЫ ПЕРЕДАЧИ ПОСЛЕДНЕГО ЭЛЕМЕНТА СПИСКА И ДОБАВЛЕНИЯ ЭЛЕМЕНТА В КОНЕЦ СПИСКА ///////
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-/// Тест на количество элементов списка после добавления нескольких элементов в его конец
+///// Тест на количество элементов списка после добавления нескольких элементов в его конец
 TEST(MyListTests, pushBackCheckSize) {
 
     MyList<int> myList;
@@ -107,7 +107,7 @@ TEST(MyListTests, pushBackCheckSize) {
     EXPECT_EQ(myList.getSize(), testList.size());
 }
 
-/// Тест возможности передачи ссылки на последний элемент списка посредством проверки его значения
+///// Тест возможности передачи ссылки на последний элемент списка посредством проверки его значения
 TEST(MyListTests, backCheck) {
 
     MyList<int> myList;
@@ -124,7 +124,7 @@ TEST(MyListTests, backCheck) {
     EXPECT_EQ(myList.back(), testList.back());
 }
 
-/// Тест возможности изменения последнего элемента списка по передаваемой ссылке
+///// Тест возможности изменения последнего элемента списка по передаваемой ссылке
 TEST(MyListTests, backCheckChangingValueCheck) {
 
     MyList<int> myList;
@@ -143,7 +143,7 @@ TEST(MyListTests, backCheckChangingValueCheck) {
 ////// ТЕСТЫ ВОЗВРАЩЕНИЯ ПЕРВОГО ЭЛЕМЕНТА СПИСКА И ДОБАВЛЕНИЯ ЭЛЕМЕНТА В НАЧАЛО СПИСКА //////
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-/// Проверка размера списка после добавления элементов в начало
+///// Проверка размера списка после добавления элементов в начало
 TEST(MyListTests, pushFrontCheckSize) {
 
     MyList<int> myList;
@@ -160,7 +160,7 @@ TEST(MyListTests, pushFrontCheckSize) {
     EXPECT_EQ(myList.getSize(), testList.size());
 }
 
-/// Тест возможности передачи ссылки на первый элемент списка посредством проверки его значения
+///// Тест возможности передачи ссылки на первый элемент списка посредством проверки его значения
 TEST(MyListTests, frontCheck) {
 
     MyList<int> myList;
@@ -177,7 +177,7 @@ TEST(MyListTests, frontCheck) {
     EXPECT_EQ(myList.front(), testList.front());
 }
 
-/// Тест возможности изменения значения первого элемента списка по передаваемой ссылке на него
+///// Тест возможности изменения значения первого элемента списка по передаваемой ссылке на него
 TEST(MyListTests, frontCheckChangingValueCheck) {
 
     MyList<int> myList;
@@ -196,8 +196,8 @@ TEST(MyListTests, frontCheckChangingValueCheck) {
 /// ТЕСТЫ УДАЛЕНИЯ ПЕРВОГО И ПОСЛЕДНЕГО ЭЛЕМЕНТОВ СПИСКА ///
 ////////////////////////////////////////////////////////////
 
-/// Проверка количества элементов после удаления последних элементов списка,
-/// и не будет ли ошибки при удалении последнего элемента у пустого списка
+///// Проверка количества элементов после удаления последних элементов списка,
+///// и не будет ли ошибки при удалении последнего элемента у пустого списка
 TEST(MyListTests, popBackCheckSize) {
 
     MyList<int> myList;
@@ -222,8 +222,8 @@ TEST(MyListTests, popBackCheckSize) {
     myList.popBack();
 }
 
-/// Проверка количества элементов после удаления первых элементов списка
-/// и не будет ли ошибки после удаления первого элемента у пустого списка
+///// Проверка количества элементов после удаления первых элементов списка
+///// и не будет ли ошибки после удаления первого элемента у пустого списка
 TEST(MyListTests, popFrontCheckSize) {
 
     MyList<int> myList;
@@ -248,7 +248,7 @@ TEST(MyListTests, popFrontCheckSize) {
     myList.popFront();
 }
 
-/// Тест функции очищения списка
+///// Тест функции очищения списка
 TEST(MyListTests, clearListCheck) {
 
     MyList<int> myList;
@@ -276,7 +276,7 @@ TEST(MyListTests, clearListCheck) {
 //////////////////// ТЕСТЫ ФУНКЦИЙ НА РАБОТУ С ЭЛЕМЕНТАМИ СПИСКА ////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
 
-/// тест функции замены содержимого пустого списка на некоторое количество одинаковых элементов
+///// тест функции замены содержимого пустого списка на некоторое количество одинаковых элементов
 TEST(MyListTests, assignCheckEmpty) {
 
     MyList<int> myList;
@@ -289,7 +289,7 @@ TEST(MyListTests, assignCheckEmpty) {
     EXPECT_EQ(myList.back(), testList.back());
 }
 
-/// тест функции замены содержимого не пустого списка на некоторое количество одинаковых элементов
+///// тест функции замены содержимого не пустого списка на некоторое количество одинаковых элементов
 TEST(MyListTests, assignCheckNotEmpty) {
 
     MyList<int> myList;
@@ -308,7 +308,7 @@ TEST(MyListTests, assignCheckNotEmpty) {
     EXPECT_EQ(myList.back(), testList.back());
 }
 
-/// тест функции замены содержимого не пустого списка на некоторое количество одинаковых элементов
+///// тест функции замены содержимого не пустого списка на некоторое количество одинаковых элементов
 TEST(MyListTests, assignOperatorCopyingCheck) {
 
     MyList<int> myList;
@@ -330,7 +330,7 @@ TEST(MyListTests, assignOperatorCopyingCheck) {
     EXPECT_EQ(*iter1, *iter2); // 3 элемент
 }
 
-/// тест функции вставки нового узла перед узлом на который указывает итератор
+///// тест функции вставки нового узла перед узлом на который указывает итератор
 TEST(MyListTests, insertOneElementCheck) {
 
     MyList<int> myList;
@@ -352,7 +352,7 @@ TEST(MyListTests, insertOneElementCheck) {
     }
 }
 
-/// тест функции вставки count новых узлов перед узлом на который указывает итератор
+///// тест функции вставки count новых узлов перед узлом на который указывает итератор
 TEST(MyListTests, insertManyElementsCheck) {
 
     MyList<int> myList;
@@ -377,7 +377,7 @@ TEST(MyListTests, insertManyElementsCheck) {
     EXPECT_EQ(4, myList.getSize());
 }
 
-/// тест функции вставки новых узлов из init списка перед узлом на который указывает итератор
+///// тест функции вставки новых узлов из init списка перед узлом на который указывает итератор
 TEST(MyListTests, insertElementFromListCheck) {
 
     MyList<int> myList;
@@ -401,7 +401,7 @@ TEST(MyListTests, insertElementFromListCheck) {
     EXPECT_EQ(5, myList.getSize());
 }
 
-/// тест функции удаления узла, вариант когда узел в середине
+///// тест функции удаления узла, вариант когда узел в середине
 TEST(MyListTests, eraseSingleElement1) {
 
     MyList<int> myList = {1, 2, 3, 3, 4};
@@ -420,7 +420,7 @@ TEST(MyListTests, eraseSingleElement1) {
     EXPECT_EQ(4, myList.getSize());
 }
 
-/// тест функции удаления узла, вариант когда узел - первый
+///// тест функции удаления узла, вариант когда узел - первый
 TEST(MyListTests, eraseSingleElement2) {
 
     MyList<int> myList = {1, 2, 3, 4, 5};
@@ -438,7 +438,7 @@ TEST(MyListTests, eraseSingleElement2) {
     EXPECT_EQ(4, myList.getSize());
 }
 
-/// тест функции удаления узла, вариант когда узел - последний
+///// тест функции удаления узла, вариант когда узел - последний
 TEST(MyListTests, eraseSingleElement3) {
 
     MyList<int> myList = {1, 2, 3, 4, 5};
@@ -456,7 +456,7 @@ TEST(MyListTests, eraseSingleElement3) {
     EXPECT_EQ(4, myList.getSize());
 }
 
-/// тест функции удаления узлов в диапазоне [first, last)
+/// тест функции удаления узлов в диапазоне [first, last) !!!!!valgring problems!!!!!!
 TEST(MyListTests, eraseElementsInRange) {
 
     MyList<int> myList = {1, 2, 3, 3, 3, 4, 5};
@@ -477,7 +477,7 @@ TEST(MyListTests, eraseElementsInRange) {
     EXPECT_EQ(5, myList.getSize());
 }
 
-/// тест функции удаления узлов в диапазоне [first, last), частный случай first == last
+///// тест функции удаления узлов в диапазоне [first, last), частный случай first == last
 TEST(MyListTests, eraseElementsInRangeOfZero) {
 
     MyList<int> myList = {1, 2, 3, 4, 5};
@@ -498,7 +498,7 @@ TEST(MyListTests, eraseElementsInRangeOfZero) {
     EXPECT_EQ(5, myList.getSize());
 }
 
-/// тест функции замены узла, случай когда заменяемый узел посередине
+///// тест функции замены узла, случай когда заменяемый узел посередине
 TEST(MyListTests, emplaceCheck) {
 
     MyList<int> myList = {1, 2, 3, 5, 5};
@@ -517,7 +517,7 @@ TEST(MyListTests, emplaceCheck) {
     EXPECT_EQ(5, myList.getSize());
 }
 
-/// тест функции замены узла, случай когда заменяемый узел последний
+///// тест функции замены узла, случай когда заменяемый узел последний
 TEST(MyListTests, emplaceLastCheck) {
 
     MyList<int> myList = {1, 2, 3, 4, 4};
@@ -535,7 +535,7 @@ TEST(MyListTests, emplaceLastCheck) {
     EXPECT_EQ(5, myList.getSize());
 }
 
-/// тест функции замены узла, случай когда итератор показывает что заменяемый узел стоит перед первым
+///// тест функции замены узла, случай когда итератор показывает что заменяемый узел стоит перед первым
 TEST(MyListTests, emplaceBeforeFirstCheck) {
 
     MyList<int> myList = {1, 2, 3, 4, 5};
@@ -553,11 +553,56 @@ TEST(MyListTests, emplaceBeforeFirstCheck) {
     EXPECT_EQ(6, myList.getSize());
 }
 
+///// тест оператора присваивания копированием
+TEST(MyListTests, opertorAssignCopyCheck) {
+
+    MyList<int> myList1 = {1, 2, 3, 4, 5};
+    MyList<int> myList2 = {2,3};
+
+    myList2 = myList1;
+    auto iter2 = myList2.begin();
+
+    for (auto iter1 = myList1.begin(); iter1 != myList1.end(); iter1++) {
+        EXPECT_EQ(*iter1, *iter2);
+        iter2++;
+    }
+}
+
+///// тест оператора присваивания перемещением
+TEST(MyListTests, opertorAssignMoveCheck) {
+
+    MyList<int> myList1 = {1, 2, 3, 4, 5};
+    MyList<int> myList2 = {1,5};
+
+    myList2 = std::move(myList1);
+
+    int check = 1;
+    for (auto iter2 = myList2.begin(); iter2 != myList2.end(); iter2++) {
+        EXPECT_EQ(check, *iter2);
+        check++;
+    }
+    EXPECT_EQ(myList1.empty(), true);
+}
+
+///// тест оператора присваивания с помощью списка инициализации
+TEST(MyListTests, opertorAssignInitListCheck) {
+
+    MyList<int> myList = {1, 4, 5};
+
+    myList = {1,2,3,4,5};
+
+    int check = 1;
+    for (auto iter1 = myList.begin(); iter1 != myList.end(); iter1++) {
+        EXPECT_EQ(*iter1, check);
+        check++;
+    }
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// ТЕСТЫ ИТЕРАТОРА //////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
 
-/// тест возвращения итератора на первый узел списка и оператора разыменования
+///// тест возвращения итератора на первый узел списка и оператора разыменования
  TEST(MyListTests, beginCheck) {
 
      MyList<int> myList;
@@ -571,7 +616,7 @@ TEST(MyListTests, emplaceBeforeFirstCheck) {
      EXPECT_EQ(myList.front(), *iter);
  }
 
- /// тест возвращения итератора на следующий после последнего узел списка
+ ///// тест возвращения итератора на следующий после последнего узел списка
   TEST(MyListTests, endCheck) {
 
       MyList<int> myList;
@@ -583,14 +628,13 @@ TEST(MyListTests, emplaceBeforeFirstCheck) {
       auto iter = myList.end();
 
       bool flagNull = true;
-      if (iter == nullptr) {
+      if (iter.get() == nullptr) {
           flagNull = false;
       }
-
       EXPECT_EQ(false, flagNull);
   }
 
-/// тест возвращения итератора на первый узел списка и оператора разыменования
+///// тест возвращения итератора на первый узел списка и оператора разыменования
 TEST(MyListTests, rBeginCheck) {
 
     MyList<int> myList;
@@ -604,7 +648,7 @@ TEST(MyListTests, rBeginCheck) {
     EXPECT_EQ(myList.back(), *iter);
 }
 
-/// тест возвращения итератора на предшествующий первому узел списка
+///// тест возвращения итератора на предшествующий первому узел списка
 TEST(MyListTests, rEndCheck) {
 
     MyList<int> myList;
@@ -616,14 +660,14 @@ TEST(MyListTests, rEndCheck) {
     auto iter = myList.rEnd();
 
     bool flagNull = true;
-    if (iter == nullptr) {
+    if (iter.get() == nullptr) {
         flagNull = false;
     }
 
     EXPECT_EQ(false, flagNull);
 }
 
-  /// тест префиксного инкремента
+  ///// тест префиксного инкремента
    TEST(MyListTests, prefixIncrementCheck) {
 
        MyList<int> myList;
@@ -642,7 +686,7 @@ TEST(MyListTests, rEndCheck) {
        EXPECT_EQ(3, *iter);
    }
 
-   /// тест постфиксного инкремента
+   ///// тест постфиксного инкремента
     TEST(MyListTests, postfixIncrementCheck) {
 
         MyList<int> myList;
@@ -660,7 +704,7 @@ TEST(MyListTests, rEndCheck) {
         EXPECT_EQ(3, *iter);
     }
 
-    /// тест префиксного декремента
+    ///// тест префиксного декремента
      TEST(MyListTests, prefixDecrementCheck) {
 
          MyList<int> myList;
@@ -679,7 +723,7 @@ TEST(MyListTests, rEndCheck) {
          EXPECT_EQ(1, *iter);
      }
 
-     /// тест постфиксного инкремента
+     ///// тест постфиксного инкремента
       TEST(MyListTests, postfixDecrementCheck) {
 
           MyList<int> myList;
@@ -698,7 +742,7 @@ TEST(MyListTests, rEndCheck) {
           EXPECT_EQ(1, *iter);
       }
 
-/// тест функции переноса итератора вперед
+///// тест функции переноса итератора вперед
 TEST(MyListTests, iteratorForwardCheck) {
 
     MyList<int> myList;
@@ -713,7 +757,7 @@ TEST(MyListTests, iteratorForwardCheck) {
 
 }
 
-/// тест функции переноса итератора вперед
+///// тест функции переноса итератора вперед
 TEST(MyListTests, iteratorBackwardCheck) {
 
     MyList<int> myList;

@@ -13,7 +13,7 @@ struct Node {
 
     Y value; // копия переданного элемента списка
     Node *prev; // ссылка на предыдущий элемент списка
-    Node *next; // ссылка на последующий элемент списка
+    Node* next; // ссылка на последующий элемент списка
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -34,7 +34,7 @@ public:
 
     struct MyIterator {
 
-        MyIterator(Node<T>* ptr) : mPtr(ptr) {}
+        explicit MyIterator(Node<T>* ptr) : mPtr(ptr) {}
 
         T& operator*() const { return mPtr->value; }
         Node<T>* operator->() { return mPtr; }
@@ -44,8 +44,10 @@ public:
 
         // префиксный итератор сложения
         MyIterator& operator++() {
-        mPtr = mPtr->next;
-        return *this;
+            if (mPtr) {
+                mPtr = mPtr->next; // указатель у итератора переходит на следующий узел
+            }
+            return *this;
         }
 
         //постфиксный итератор сложения
@@ -66,6 +68,12 @@ public:
         MyIterator temp = *this;
         mPtr = mPtr->prev;
         return temp;
+        }
+
+
+        MyIterator& operator=(Node<T>* ptr) {
+            mPtr = ptr;
+            return *this;
         }
 
         friend bool operator==(const MyIterator& lhs, const MyIterator& rhs) { return lhs.mPtr == rhs.mPtr; }
@@ -159,8 +167,9 @@ public:
     // оператор присваивания копированием
     MyList& operator= (const MyList& other) {
         if (this != &other) {
-            for (const T& value : other) {
-                pushBack(value);
+            clearList();
+            for (auto it = other.begin(); it != other.end(); ++it) {
+                pushBack(*it);
             }
         }
         return *this;
@@ -168,13 +177,26 @@ public:
 
     // оператор присваивания перемещением
     MyList& operator= (MyList&& other) noexcept{
-        clearList();
+        if (this != &other) {
+            clearList();
+            size = other.size;
+            first = other.first;
+            last = other.last;
+
+            other.first = nullptr;
+            other.last = nullptr;
+            other.size = 0;
+        }
+        return *this;
     }
 
     // замена текущего содержимого содержимым списка инициализации
     MyList& operator= (std::initializer_list<T> other) {
         clearList();
-        size = other.size;
+        for (const T& value : other) {
+            pushBack(value);
+        }
+        return *this;
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -186,7 +208,7 @@ public:
         // выделяем память под новый узел - элемент списка
         // конструктору узла передаем сам элемент, адрес последнего элемента указателю на предыдущий узел,
         // и nullptr указателю на следующий узел, так как мы добавляем элемент в конец списка
-        Node<T>* newNode = new Node<T>(value, last, nullptr);
+        auto newNode = new Node<T>(value, last, nullptr);
         if (last) { // проверяем, существует ли последний узел - адресует ли на что-то указатель на последний узел
             last->next = newNode; // если он существует, его указателю на следующий элемент присваиваем адрес нового узла
         } else { // если последнего узла не существует, то делаем вывод, что у нас пустой список
@@ -201,7 +223,7 @@ public:
         // выделяем память под новый узел - элемент списка
         // конструктору узла передаем сам элемент, адрес первого элемента указателю на последующий узел,
         // и nullptr указателю на предыдущий узел, так как мы добавляем элемент в начало списка
-        Node<T>* newNode = new Node<T>(value, nullptr, first);
+        auto newNode = new Node<T>(value, nullptr, first);
         if (first) { // проверяем, существует ли первый узел - адресует ли на что-то указатель на первый узел
             first->prev = newNode; // если он существует, его указателю на предыдущее значение присваиваем адрес нового узла
         } else { // если первого узла не существует, делаем вывод, что список пуст
@@ -262,8 +284,8 @@ public:
     // вставка нового узла на указанную позицию с копированием value
     MyIterator insert(MyIterator pos, const T& value) {
         // передаваемый итератор pos указывает на узел, перед которым будет вставлен новый узел
-        Node<T>* newNode = new Node<T>(value, nullptr, nullptr); // инициализируем в памяти новый узел и объявляем указатель на него
-        if (pos != nullptr) {
+        auto newNode = new Node<T>(value, nullptr, nullptr); // инициализируем в памяти новый узел и объявляем указатель на него
+        if (pos.get() != nullptr) {
             // указателю на следующий элемент нового узла присваиваем адрес узла на который указывает итератор pos
             newNode->next = pos.get();
             // указателю на предыдущий элемент нового узла присваиваем адрес узла, который предшествует узлу на который указывает итератор pos
@@ -281,7 +303,7 @@ public:
 
     // вставка count новых узлов на указанную позицию с копированием value
     void insert(MyIterator pos, size_t count, const T& value) {
-        if (pos != nullptr) {
+        if (pos.get() != nullptr) {
             for (size_t i = 0; i < count; ++i) {
                 insert(pos, value);
             }
@@ -295,7 +317,7 @@ public:
 
     // вставка новых узлов на указанную позицию из содержимого списка инициализации с копированием value
     MyIterator insert(MyIterator pos, std::initializer_list<T> init) {
-        if (pos != nullptr) {
+        if (pos.get() != nullptr) {
             for (const T& value : init) {
                 insert(pos, value);
             }
@@ -316,18 +338,18 @@ public:
     MyIterator erase(MyIterator pos) {
         if (pos->next != nullptr && pos->prev != nullptr) { // вариант когда удаляемый узел в середине
             Node<T>* temp = pos.get();
-            pos++;
+            ++pos;
             pos->prev->prev->next = pos.get();
             pos->prev = pos->prev->prev;
             delete temp;
             size--;
             return pos; // тут return внутри условия чтобы не было ошибки сегментации
         }
-        if (pos == last) { // вариант когда удаляемый узел - последний
+        if (pos.get() == last) { // вариант когда удаляемый узел - последний
             popBack();
             pos = nullptr;
         }
-        if (pos == first) { // вариант когда удаляемый узел - первый
+        if (pos.get() == first) { // вариант когда удаляемый узел - первый
             popFront();
             pos = first;
         }
@@ -335,10 +357,11 @@ public:
     }
 
     // удаление элементов в диапазоне [first, last)
-    MyIterator erase(MyIterator first, MyIterator last) {
-        MyIterator temp = last;
-        if (first != last) {
-            for (MyIterator iter = first; iter != last; ++iter) {
+    MyIterator erase(MyIterator firstDeleted, MyIterator lastDeleted) {
+
+        MyIterator temp = lastDeleted;
+        if (firstDeleted != lastDeleted) {
+            for (MyIterator iter = firstDeleted; iter != lastDeleted; ++iter) {
                 erase(iter);
             }
         }
@@ -347,12 +370,12 @@ public:
 
     // замена значения в узле, предыдущего тому на который указывает pos
     MyIterator emplace(MyIterator pos, const T& value) {
-        if (pos == first) {
+        if (pos.get() == first) {
             pushFront(value);
             pos = first;
         } else {
-            if (pos != nullptr) {
-                pos--;
+            if (pos.get() != nullptr) {
+                --pos;
                 *pos = value;
             } else {
                 last->value = value;
@@ -379,7 +402,7 @@ public:
     MyIterator rEnd() const { return MyIterator(first->prev); }
 
     bool empty() const {
-        return size == 0;
+        return first == last;
     }
 
     size_t getSize() const {
