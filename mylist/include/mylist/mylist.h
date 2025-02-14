@@ -1,18 +1,14 @@
 #ifndef MYLIST
 #define MYLIST
 
-#include <algorithm>
 #include <memory>
-#include <iostream>
-#include <list>
-#include <bits/locale_facets_nonio.h>
 
 ////////////////////////////////////////////////////////////////////
 /////////////////////////// УЗЕЛ СПИСКА ////////////////////////////
 ////////////////////////////////////////////////////////////////////
 template <typename Y>
 struct Node {
-    Node(const Y& value, Node<Y>* prev = nullptr, Node<Y>* next = nullptr)
+    explicit Node(const Y& value, Node<Y>* prev = nullptr, Node<Y>* next = nullptr)
     : value(value), prev(prev), next(next) {}
 
     Y value; // копия переданного элемента списка
@@ -120,7 +116,7 @@ public:
     }
 
     // конструктор перемещения
-    MyList(MyList&& other) : MyList() {
+    MyList(MyList&& other) noexcept : MyList() {
         size = other.size;
         first = other.first;
         last = other.last;
@@ -162,14 +158,16 @@ public:
 
     // оператор присваивания копированием
     MyList& operator= (const MyList& other) {
-        for (const T& value : other) {
-            pushBack(value);
+        if (this != &other) {
+            for (const T& value : other) {
+                pushBack(value);
+            }
         }
         return *this;
     }
 
     // оператор присваивания перемещением
-    MyList& operator= (MyList&& other) {
+    MyList& operator= (MyList&& other) noexcept{
         clearList();
     }
 
@@ -347,6 +345,7 @@ public:
         return temp;
     }
 
+    // замена значения в узле, предыдущего тому на который указывает pos
     MyIterator emplace(MyIterator pos, const T& value) {
         if (pos == first) {
             pushFront(value);

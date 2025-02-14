@@ -3,26 +3,16 @@
 #include <mylist/mylist.h>
 #include <iostream>
 
+void counter() {
+    static int count = 0;
+    std::cout << count++;
+}
+
 int main()
 {
-
-    MyList<int> myList;
-
-    myList.pushBack(1);
-    myList.pushBack(5);
-
-    auto iter = myList.begin();
-    iter++;
-
-    myList.insert(iter, {2,3,4});
-
-    int check = 1;
-    for (auto iter = myList.begin(); iter != myList.end(); iter++) {
-        std::cout << check << " = " << *iter << std::endl;
-        check++;
+    for (size_t i =0; i < 10; i++) {
+        counter();
     }
-
-    std::cout << myList.getSize() << std::endl;
 
 }
 
