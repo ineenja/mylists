@@ -1,14 +1,15 @@
 #ifndef MYLIST
 #define MYLIST
 
-#include <memory>
+#include <cstddef>
+#include <initializer_list>
 
 ////////////////////////////////////////////////////////////////////
 /////////////////////////// УЗЕЛ СПИСКА ////////////////////////////
 ////////////////////////////////////////////////////////////////////
 template <typename Y>
 struct Node {
-    explicit Node(const Y& value, Node<Y>* prev = nullptr, Node<Y>* next = nullptr)
+    explicit Node(const Y& value, Node* prev = nullptr, Node* next = nullptr)
     : value(value), prev(prev), next(next) {}
 
     Y value; // копия переданного элемента списка
@@ -358,14 +359,14 @@ public:
 
     // удаление элементов в диапазоне [first, last)
     MyIterator erase(MyIterator firstDeleted, MyIterator lastDeleted) {
-
-        MyIterator temp = lastDeleted;
         if (firstDeleted != lastDeleted) {
-            for (MyIterator iter = firstDeleted; iter != lastDeleted; ++iter) {
-                erase(iter);
+            while (firstDeleted != lastDeleted) {
+                auto temp = firstDeleted;
+                ++firstDeleted;
+                erase(temp);
             }
         }
-        return temp;
+        return lastDeleted;
     }
 
     // замена значения в узле, предыдущего тому на который указывает pos

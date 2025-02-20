@@ -470,7 +470,7 @@ TEST(MyListTests, eraseElementsInRange) {
     EXPECT_EQ(4, *iter);
 
     int check = 1;
-    for (auto iter = myList.begin(); iter != myList.end(); iter++) {
+    for (iter = myList.begin(); iter != myList.end(); ++iter) {
         EXPECT_EQ(check, *iter);
         check++;
     }
