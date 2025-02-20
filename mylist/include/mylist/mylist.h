@@ -16,7 +16,7 @@ class MyList {
     ////////////////////////////////////////////////////////////////////
     struct Node {
         template <typename... Args>
-        explicit Node(Args&&... args)
+        explicit Node(Args&&... args) noexcept
         : value(std::forward<Args>(args)...), prev(nullptr), next(nullptr) {}
 
         T value; // копия переданного элемента списка
@@ -36,16 +36,16 @@ public:
 
     struct MyIterator {
 
-        explicit MyIterator(Node* ptr) : mPtr(ptr) {}
+        explicit MyIterator(Node* ptr) noexcept : mPtr(ptr) {}
 
-        T& operator*() const { return mPtr->value; }
-        Node* operator->() { return mPtr; }
+        T& operator*() const noexcept { return mPtr->value; }
+        Node* operator->() noexcept { return mPtr; }
 
-        Node* get() const { return mPtr; }
+        [[nodiscard]] Node* get() const noexcept { return mPtr; }
 
 
         // префиксный итератор сложения
-        MyIterator& operator++() {
+        MyIterator& operator++() noexcept {
             if (mPtr) {
                 mPtr = mPtr->next; // указатель у итератора переходит на следующий узел
             }
@@ -53,36 +53,36 @@ public:
         }
 
         //постфиксный итератор сложения
-        MyIterator operator++(int) {
+        MyIterator operator++(int) noexcept {
         MyIterator temp = *this;
         mPtr = mPtr->next;
         return temp;
         }
 
         // префиксный итератор вычитания
-        MyIterator& operator--() {
+        MyIterator& operator--() noexcept {
         mPtr = mPtr->prev;
         return *this;
         }
 
         //постфиксный итератор вычитания
-        MyIterator operator--(int) {
+        MyIterator operator--(int) noexcept {
         MyIterator temp = *this;
         mPtr = mPtr->prev;
         return temp;
         }
 
 
-        MyIterator& operator=(Node* ptr) {
+        MyIterator& operator=(Node* ptr) noexcept {
             mPtr = ptr;
             return *this;
         }
 
-        friend bool operator==(const MyIterator& lhs, const MyIterator& rhs) { return lhs.mPtr == rhs.mPtr; }
-        friend bool operator!=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs == rhs); }
+        friend bool operator==(const MyIterator& lhs, const MyIterator& rhs) noexcept { return lhs.mPtr == rhs.mPtr; }
+        friend bool operator!=(const MyIterator& lhs, const MyIterator& rhs) noexcept { return !(lhs == rhs); }
 
         // перенос итератора на step шагов вперед
-        void forward(size_t step) {
+        void forward(size_t step) noexcept {
             for (size_t i = 0; i < step; ++i) {
                 if (mPtr != nullptr) {
                     mPtr = mPtr->next;
@@ -91,7 +91,7 @@ public:
         }
 
         // перенос итератора на step шагов назад
-        void backward(size_t step) {
+        void backward(size_t step) noexcept {
             for (size_t i = 0; i < step; ++i) {
                 if (mPtr != nullptr) {
                     mPtr = mPtr->prev;
@@ -111,15 +111,15 @@ public:
 
     // конструктор по умолчанию, создающий пустой контейнер без элементов
     // указателям на первый и последний узлы списка присваиваем nullptr чтобы было ясно что узлов нет
-    explicit MyList() : first(nullptr), last(nullptr), size(0) {};
+    explicit MyList() noexcept : first(nullptr), last(nullptr), size(0) {};
 
     // конструктор с числом count копий элемента имеющего значение value
-    MyList(size_t count, const T& value) : MyList(){ // делегируем создание пустого списка конструктору по умолчанию
+    MyList(size_t count, const T& value) noexcept : MyList(){ // делегируем создание пустого списка конструктору по умолчанию
         this->assign(count, value);
     }
 
     // конструктор копирования
-    MyList(const MyList& other) : MyList() {
+    MyList(const MyList& other) noexcept : MyList() {
         for (const T& value : other) {
             pushBack(value);
         }
@@ -137,7 +137,7 @@ public:
     }
 
     // конструктор для создания контейнера с содержимым списка инициализации init
-    MyList(std::initializer_list<T> init) : MyList() {
+    MyList(std::initializer_list<T> init) noexcept : MyList() {
         for (const T& value : init) {
             pushBack(value);
         }
@@ -148,13 +148,13 @@ public:
     ///////////// ДЕСТРУКТОР, ОЧИЩЕНИЕ ПАМЯТИ //////////////
     ////////////////////////////////////////////////////////
 
-    ~MyList() {
+    ~MyList() noexcept {
         clearList(); // деструктор списка вызывает функцию очищения списка
         delete first; // удаляем указатель на первый элемент списка
         delete last; // удаляем указатель на последний элемент списка
     }
 
-    void clearList() { // функция очищения списка
+    void clearList() noexcept { // функция очищения списка
         while (first) { // пока указатель на первый элемент списка на что-то указывает, значит список еще не пуст
             popFront(); // пока список еще не пуст, в цикле будет вызываться функция удаления первого элемента списка
         }
@@ -167,7 +167,7 @@ public:
     ////////////////////////////////////////////////////////
 
     // оператор присваивания копированием
-    MyList& operator= (const MyList& other) {
+    MyList& operator= (const MyList& other) noexcept {
         if (this != &other) {
             clearList();
             for (auto it = other.begin(); it != other.end(); ++it) {
@@ -193,7 +193,7 @@ public:
     }
 
     // замена текущего содержимого содержимым списка инициализации
-    MyList& operator= (std::initializer_list<T> other) {
+    MyList& operator= (std::initializer_list<T> other) noexcept {
         clearList();
         for (const T& value : other) {
             pushBack(value);
@@ -206,7 +206,7 @@ public:
     ////////////////////////////////////////////////////////////////////////
 
     // добавление элемента в конец списка для lvalue
-    void pushBack(const T& value) {
+    void pushBack(const T& value) noexcept {
         // выделяем память под новый узел - элемент списка
         // конструктору узла передаем сам элемент, адрес последнего элемента указателю на предыдущий узел,
         // и nullptr указателю на следующий узел, так как мы добавляем элемент в конец списка
@@ -222,7 +222,7 @@ public:
     }
 
     // добавление элемента в конец списка для rvalue
-    void pushBack(T&& value) {
+    void pushBack(T&& value) noexcept {
         // выделяем память под новый узел - элемент списка
         // конструктору узла передаем сам элемент, адрес последнего элемента указателю на предыдущий узел,
         // и nullptr указателю на следующий узел, так как мы добавляем элемент в конец списка
@@ -238,7 +238,7 @@ public:
     }
 
     // добавление элемента в начало списка для lvalue
-    void pushFront(const T& value) {
+    void pushFront(const T& value) noexcept {
         // выделяем память под новый узел - элемент списка
         // конструктору узла передаем сам элемент, адрес первого элемента указателю на последующий узел,
         // и nullptr указателю на предыдущий узел, так как мы добавляем элемент в начало списка
@@ -256,7 +256,7 @@ public:
     }
 
     // добавление элемента в начало списка для rvalue
-    void pushFront(T&& value) {
+    void pushFront(T&& value) noexcept {
         // выделяем память под новый узел - элемент списка
         // конструктору узла передаем сам элемент, адрес первого элемента указателю на последующий узел,
         // и nullptr указателю на предыдущий узел, так как мы добавляем элемент в начало списка
@@ -274,7 +274,7 @@ public:
     }
 
     // удаление последнего элемента списка
-    void popBack() {
+    void popBack() noexcept {
         if (last) { // проверяем, существует ли последний узел - то есть не пустой ли у нас список
             // если список не пустой, то удаление его последнего элемента имеет смысл и можно продолжать работу функции
             Node* temp = last; // создаем временный указатель на последний узел списка
@@ -293,7 +293,7 @@ public:
     }
 
     // удаление первого элемента списка
-    void popFront() {
+    void popFront() noexcept {
         if (first) { // проверяем, существует ли первый узел, то есть не пустой ли у нас список
             // если список не пустой, то удаление его первого элемента имеет смысл и можно продолжать работу функции
             Node* temp = first; // создаем временный указатель на первый узел списка
@@ -313,7 +313,7 @@ public:
 
     // добавление элемента в конец списка без копирования или перемещения
     template <typename... Args>
-    void emplaceBack(Args&&... args) {
+    void emplaceBack(Args&&... args) noexcept {
         auto* newNode = new Node(std::forward<Args>(args)...);
         if (last) {
             last->next = newNode;
@@ -328,7 +328,7 @@ public:
 
     // добавление элемента в начало списка без копирования или перемещения
     template <typename... Args>
-    void emplaceFront(Args&&... args) {
+    void emplaceFront(Args&&... args) noexcept {
         auto* newNode = new Node(std::forward<Args>(args)...);
         if (first) {
             first->prev = newNode;
@@ -342,7 +342,7 @@ public:
     }
 
     // функция заполнения списка count количеством копий значения value
-    void assign(size_t count, const T& value) {
+    void assign(size_t count, const T& value) noexcept {
         clearList(); // предварительное очищение списка
         for (size_t i = 0; i < count; i++) { // заполнение пустого списка копиями value в цикле
             pushBack(value);
@@ -350,7 +350,7 @@ public:
     }
 
     // вставка нового узла на указанную позицию с копированием value
-    MyIterator insert(MyIterator pos, const T& value) {
+    MyIterator insert(MyIterator pos, const T& value) noexcept {
         // передаваемый итератор pos указывает на узел, перед которым будет вставлен новый узел
         auto newNode = new Node(value); // инициализируем в памяти новый узел и объявляем указатель на него
         if (pos.get() != nullptr) {
@@ -370,7 +370,7 @@ public:
     }
 
     // вставка count новых узлов на указанную позицию с копированием value
-    void insert(MyIterator pos, size_t count, const T& value) {
+    void insert(MyIterator pos, size_t count, const T& value) noexcept {
         if (pos.get() != nullptr) {
             for (size_t i = 0; i < count; ++i) {
                 insert(pos, value);
@@ -384,7 +384,7 @@ public:
     }
 
     // вставка новых узлов на указанную позицию из содержимого списка инициализации с копированием value
-    MyIterator insert(MyIterator pos, std::initializer_list<T> init) {
+    MyIterator insert(MyIterator pos, std::initializer_list<T> init) noexcept {
         if (pos.get() != nullptr) {
             for (const T& value : init) {
                 insert(pos, value);
@@ -403,7 +403,7 @@ public:
     }
 
     // удаление узла в позиции pos
-    MyIterator erase(MyIterator pos) {
+    MyIterator erase(MyIterator pos) noexcept {
         if (pos->next != nullptr && pos->prev != nullptr) { // вариант когда удаляемый узел в середине
             Node* temp = pos.get();
             ++pos;
@@ -425,7 +425,7 @@ public:
     }
 
     // удаление элементов в диапазоне [first, last)
-    MyIterator erase(MyIterator firstDeleted, MyIterator lastDeleted) {
+    MyIterator erase(MyIterator firstDeleted, MyIterator lastDeleted) noexcept {
         if (firstDeleted != lastDeleted) {
             while (firstDeleted != lastDeleted) {
                 auto temp = firstDeleted;
@@ -437,7 +437,7 @@ public:
     }
 
     // замена значения в узле, предыдущего тому на который указывает pos
-    MyIterator emplace(MyIterator pos, const T& value) {
+    MyIterator emplace(MyIterator pos, const T& value) noexcept {
         if (pos.get() == first) {
             pushFront(value);
             pos = first;
@@ -458,26 +458,25 @@ public:
     //////////////////////////////////////////////////
 
     //доступ к первому и последнему элементов списка
-    T& front() const { return first->value; }
-    T& back() const { return last->value; }
+    [[nodiscard]] T& front() const noexcept { return first->value; }
+    [[nodiscard]] T& back() const noexcept { return last->value; }
 
     // получения адресов первого и следующего после последнего элементов списка
-    MyIterator begin() const { return MyIterator(first); }
-    MyIterator end() const { return MyIterator(last->next); }
+    [[nodiscard]] MyIterator begin() const noexcept { return MyIterator(first); }
+    [[nodiscard]] MyIterator end() const noexcept { return MyIterator(last->next); }
 
     // получения адресов стоящего перед первым и последнего элементов списка
-    MyIterator rBegin() const { return MyIterator(last); }
-    MyIterator rEnd() const { return MyIterator(first->prev); }
+    [[nodiscard]] MyIterator rBegin() const noexcept { return MyIterator(last); }
+    [[nodiscard]] MyIterator rEnd() const noexcept { return MyIterator(first->prev); }
 
-    bool empty() const {
+    [[nodiscard]] bool empty() const noexcept {
         return first == last;
     }
 
-    size_t getSize() const {
+    [[nodiscard]] size_t getSize() const noexcept {
         return size;
     }
 
 };
-
 
 #endif
