@@ -108,7 +108,7 @@ TEST(MyListTests, pushBackCheckSize) {
 }
 
 ///// Тест возможности передачи ссылки на последний элемент списка посредством проверки его значения
-TEST(MyListTests, backCheck) {
+TEST(MyListTests, backCheckPush) {
 
     MyList<int> myList;
     std::list<int> testList;
@@ -137,6 +137,72 @@ TEST(MyListTests, backCheckChangingValueCheck) {
     testList.back() += 1;
 
     EXPECT_EQ(myList.back(), testList.back());
+}
+
+///// тест на функцию emplace_back, проверка размера списка
+TEST(MyListTests, emplaceBackCheckSize) {
+
+    MyList<int> myList;
+    std::list<int> testList;
+
+    myList.emplaceBack(1);
+    testList.emplace_back(1);
+
+    EXPECT_EQ(myList.getSize(), testList.size());
+
+    myList.emplaceBack(1);
+    testList.emplace_back(1);
+
+    EXPECT_EQ(myList.getSize(), testList.size());
+}
+
+///// Тест значений передаваемых в список, для функции emplaceback
+TEST(MyListTests, backCheckEmplace) {
+
+    MyList<int> myList;
+    std::list<int> testList;
+
+    myList.emplaceBack(1);
+    testList.emplace_back(1);
+
+    EXPECT_EQ(myList.back(), testList.back());
+
+    myList.emplaceBack(2);
+    testList.emplace_back(2);
+
+    EXPECT_EQ(myList.back(), testList.back());
+}
+
+///// тест на отсутствие перемещения у функции emplaceback и наличие перемещения у функции push
+TEST(MyListTests, pushBackIsMovingAndEmplaceBackIsNot) {
+    struct President
+    {
+        std::string name;
+        std::string country;
+        int year;
+        bool wasMoved = false;
+        bool wasConstructed = false;
+
+        President(std::string && p_name, std::string && p_country, int p_year)
+            : name(std::move(p_name)), country(std::move(p_country)), year(p_year)
+        {
+            wasConstructed = true;
+        }
+        President(President&& other)
+            : name(std::move(other.name)), country(std::move(other.country)), year(other.year)
+        {
+            wasMoved = true;
+        }
+
+        President& operator=(const President& other) = default;
+    };
+    MyList<President> elections;
+    elections.emplaceBack("Nelson Mandela", "South Africa", 1994);
+    EXPECT_EQ(elections.front().wasMoved, false);
+
+    MyList<President> reElections;
+    reElections.pushBack(President("Franklin Delano Roosevelt", "the USA", 1936));
+    EXPECT_EQ(reElections.front().wasMoved, true);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -190,6 +256,72 @@ TEST(MyListTests, frontCheckChangingValueCheck) {
     testList.back() += 1;
 
     EXPECT_EQ(myList.front(), testList.front());
+}
+
+///// тест на функцию emplace_front, проверка размера списка
+TEST(MyListTests, emplaceFrontCheckSize) {
+
+    MyList<int> myList;
+    std::list<int> testList;
+
+    myList.emplaceFront(1);
+    testList.emplace_front(1);
+
+    EXPECT_EQ(myList.getSize(), testList.size());
+
+    myList.emplaceFront(1);
+    testList.emplace_front(1);
+
+    EXPECT_EQ(myList.getSize(), testList.size());
+}
+
+///// Тест значений передаваемых в список, для функции emplace_front
+TEST(MyListTests, frontCheckEmplace) {
+
+    MyList<int> myList;
+    std::list<int> testList;
+
+    myList.emplaceFront(1);
+    testList.emplace_front(1);
+
+    EXPECT_EQ(myList.back(), testList.back());
+
+    myList.emplaceBack(2);
+    testList.emplace_back(2);
+
+    EXPECT_EQ(myList.back(), testList.back());
+}
+
+///// тест на отсутствие перемещения у функции emplace_front и наличие перемещения у функции push
+TEST(MyListTests, pushFrontIsMovingAndEmplaceFrontIsNot) {
+    struct President
+    {
+        std::string name;
+        std::string country;
+        int year;
+        bool wasMoved = false;
+        bool wasConstructed = false;
+
+        President(std::string && p_name, std::string && p_country, int p_year)
+            : name(std::move(p_name)), country(std::move(p_country)), year(p_year)
+        {
+            wasConstructed = true;
+        }
+        President(President&& other)
+            : name(std::move(other.name)), country(std::move(other.country)), year(other.year)
+        {
+            wasMoved = true;
+        }
+
+        President& operator=(const President& other) = default;
+    };
+    MyList<President> elections;
+    elections.emplaceFront("Nelson Mandela", "South Africa", 1994);
+    EXPECT_EQ(elections.front().wasMoved, false);
+
+    MyList<President> reElections;
+    reElections.pushFront(President("Franklin Delano Roosevelt", "the USA", 1936));
+    EXPECT_EQ(reElections.front().wasMoved, true);
 }
 
 ////////////////////////////////////////////////////////////
@@ -456,7 +588,7 @@ TEST(MyListTests, eraseSingleElement3) {
     EXPECT_EQ(4, myList.getSize());
 }
 
-/// тест функции удаления узлов в диапазоне [first, last) !!!!!valgring problems!!!!!!
+///// тест функции удаления узлов в диапазоне [first, last)
 TEST(MyListTests, eraseElementsInRange) {
 
     MyList<int> myList = {1, 2, 3, 3, 3, 4, 5};
